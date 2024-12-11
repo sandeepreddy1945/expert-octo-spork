@@ -27,44 +27,44 @@ import org.slf4j.Logger;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CSVUtils {
 
-    public static List<Map<String, Object>> readFile(String filePath) throws IOException {
-        try (FileInputStream inputStream = FileUtils.openInputStream(new File(filePath))) {
-            return readFile(inputStream);
-        }
+  public static List<Map<String, Object>> readFile(String filePath) throws IOException {
+    try (FileInputStream inputStream = FileUtils.openInputStream(new File(filePath))) {
+      return readFile(inputStream);
+    }
+  }
+
+  public static List<Map<String, Object>> readFile(String filePath, Metadata metadata) throws IOException {
+    try (FileInputStream inputStream = FileUtils.openInputStream(new File(filePath))) {
+      return readFile(inputStream, metadata);
+    }
+  }
+
+  public static List<Map<String, Object>> readFile(InputStream inputStream) throws IOException {
+    return readFile(inputStream, null);
+  }
+
+  public static List<Map<String, Object>> readFile(InputStream inputStream, Metadata metadata) throws IOException {
+    CsvMapper csvMapper = new CsvMapper();
+    csvMapper.setDateFormat(new StdDateFormat());
+    CsvSchema schema = CsvSchema.emptySchema().withHeader();
+    csvMapper.registerModule(new JavaTimeModule());
+    MappingIterator<Map<String, Object>> mappingIterator = csvMapper.readerFor(Map.class).with(schema).readValues(inputStream);
+    List<Map<String, Object>> records = mappingIterator.readAll();
+    log.info("Total number of records from csv file is: {}", records.size());
+    if (Objects.nonNull(metadata)) {
+      // if metadata is available, clean up the records using metadata
+      return DataUtils.cleanUpRecords(records, metadata);
     }
 
-    public static List<Map<String, Object>> readFile(String filePath, Metadata metadata) throws IOException {
-        try (FileInputStream inputStream = FileUtils.openInputStream(new File(filePath))) {
-            return readFile(inputStream, metadata);
-        }
-    }
+    return records;
 
-    public static List<Map<String, Object>> readFile(InputStream inputStream) throws IOException {
-        return readFile(inputStream, null);
-    }
+  }
 
-    public static List<Map<String, Object>> readFile(InputStream inputStream, Metadata metadata) throws IOException {
-        CsvMapper csvMapper = new CsvMapper();
-        csvMapper.setDateFormat(new StdDateFormat());
-        CsvSchema schema = CsvSchema.emptySchema().withHeader();
-        csvMapper.registerModule(new JavaTimeModule());
-        MappingIterator<Map<String, Object>> mappingIterator = csvMapper.readerFor(Map.class).with(schema).readValues(inputStream);
-        List<Map<String, Object>> records = mappingIterator.readAll();
-        log.info("Total number of records from csv file is: {}", records.size());
-        if (Objects.nonNull(metadata)) {
-            // if metadata is available, clean up the records using metadata
-            return DataUtils.cleanUpRecords(records, metadata);
-        }
-
-        return records;
-
-    }
-
-    public static void main(String[] args) throws IOException {
-        List<Map<String, Object>> records = readFile("src/main/resources/static/SampleData.csv");
-        Map<String, Object> headerRecord = records.get(0);
-        String query = StatementUtils.prepareQuery("order", null, OperationType.INSERT, headerRecord);
-        System.out.println(query);
-    }
+  public static void main(String[] args) throws IOException {
+    List<Map<String, Object>> records = readFile("src/main/resources/static/SampleData.csv");
+    Map<String, Object> headerRecord = records.get(0);
+    String query = StatementUtils.prepareQuery("order", null, OperationType.INSERT, headerRecord);
+    System.out.println(query);
+  }
 
 }

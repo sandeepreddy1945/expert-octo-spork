@@ -33,8 +33,7 @@ public class UtilityController {
     if (OperationType.UPDATE.equals(operationType) && CollectionUtils.isEmpty(updateWhereColumns)) {
       throw new IllegalArgumentException("updateWhereColumns cannot be empty");
     }
-    statementExecutionService.executeStatement(tableName, operationType, schemaName, fileType, fileLocalPath, isMetadataProvided,
-        updateWhereColumns);
+    statementExecutionService.executeStatement(tableName, operationType, schemaName, fileType, fileLocalPath, isMetadataProvided);
 
     return ResponseEntity.ok("SUCCESS");
   }

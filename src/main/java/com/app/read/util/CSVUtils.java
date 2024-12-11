@@ -63,7 +63,7 @@ public class CSVUtils {
   public static void main(String[] args) throws IOException {
     List<Map<String, Object>> records = readFile("src/main/resources/static/SampleData.csv");
     Map<String, Object> headerRecord = records.get(0);
-    String query = StatementUtils.prepareQuery("order", null, OperationType.INSERT, headerRecord);
+    String query = StatementUtils.prepareQuery("order", null, OperationType.INSERT, headerRecord, List.of());
     System.out.println(query);
   }
 

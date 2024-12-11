@@ -29,7 +29,7 @@ public class StatementExecutionServiceImpl implements StatementExecutionService 
 
   @Override
   public void executeStatement(String tableName, OperationType operationType, String schemaName, FileType fileType,
-      String fileLocalPath, boolean isMetadataProvided) throws IOException {
+      String fileLocalPath, boolean isMetadataProvided, List<String> updateWhereColumns) throws IOException {
 
     List<Map<String, Object>> records = List.of();
     if (FileType.CSV.equals(fileType)) {
@@ -58,7 +58,7 @@ public class StatementExecutionServiceImpl implements StatementExecutionService 
     }
 
     if (CollectionUtils.isNotEmpty(records)) {
-      String query = StatementUtils.prepareQuery(tableName, schemaName, operationType, records.get(0));
+      String query = StatementUtils.prepareQuery(tableName, schemaName, operationType, records.get(0), updateWhereColumns);
       log.info(query);
       executionRepository.executeStatements(query, records.toArray(Map[]::new));
     }
