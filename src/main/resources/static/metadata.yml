@@ -1,0 +1,25 @@
+table:
+  name: order_details
+  schema:
+  columns:
+    - name: OrderDate
+      type: float
+      mapping: OrderDate
+    - name: Region
+      type: string
+      mapping: Region
+    - name: Rep
+      type: string
+      mapping: Rep
+    - name: Item
+      type: string
+      mapping: Item
+    - name: Units
+      type: float
+      mapping: Units
+    - name: UnitCost
+      type: float
+      mapping: UnitCost
+    - name: Total
+      type: float
+      mapping: Total
