@@ -1,6 +1,5 @@
 package com.app.read.model;
 
-import com.app.read.enums.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,4 @@ public class Column {
   private String name;
   private String type;
   private String mapping;
-  private boolean generate;
-  private GenerationType generationType;
 }
