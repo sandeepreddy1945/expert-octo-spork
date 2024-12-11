@@ -39,6 +39,10 @@ public class XLUtils {
     }
   }
 
+  public static List<Map<String, Object>> readFile(InputStream in, Metadata metadata) throws IOException {
+    return readFileInputStream(in, metadata);
+  }
+
 
   public static List<Map<String, Object>> readFileInputStream(InputStream in) throws IOException {
     return readFileInputStream(in, null);

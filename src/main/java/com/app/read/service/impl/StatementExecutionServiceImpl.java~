@@ -73,7 +73,8 @@ public class StatementExecutionServiceImpl implements StatementExecutionService 
     List<Map<String, Object>> records = List.of();
     fileType = determineFileTye(fileType, dataFile);
     if (FileType.CSV.equals(fileType)) {
-      if (isMetadataProvided && metadataFile != null) {
+      if (isMetadataProvided) {
+
         Metadata metadata = YamlUtils.readMetadata(metadataFile.getInputStream());
         records = CSVUtils.readFile(dataFile.getInputStream(), metadata);
       } else {
@@ -81,7 +82,8 @@ public class StatementExecutionServiceImpl implements StatementExecutionService 
       }
 
     } else if (FileType.XL.equals(fileType)) {
-      if (isMetadataProvided && metadataFile != null) {
+      if (isMetadataProvided) {
+
         Metadata metadata = YamlUtils.readMetadata(metadataFile.getInputStream());
         records = XLUtils.readFile(dataFile.getInputStream(), metadata);
       } else {

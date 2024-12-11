@@ -16,9 +16,14 @@ import org.apache.commons.io.FileUtils;
 public class YamlUtils {
 
   public static Metadata readMetadata(String filePath) throws IOException {
-    YAMLMapper yamlMapper = new YAMLMapper();
     try (InputStream inputStream = FileUtils.openInputStream(new File(filePath))) {
-      return yamlMapper.readValue(inputStream, Metadata.class);
+      return readMetadata(inputStream);
     }
+  }
+
+  public static Metadata readMetadata(InputStream filePath) throws IOException {
+    YAMLMapper yamlMapper = new YAMLMapper();
+    return yamlMapper.readValue(filePath, Metadata.class);
+
   }
 }
