@@ -2,6 +2,7 @@ package com.app.read.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -19,5 +20,9 @@ public class Table {
 
   public Map<String, Column> getColumnMap() {
     return columns.stream().collect(Collectors.toMap(Column::getMapping, Function.identity()));
+  }
+
+  public List<Column> getDefaultColumns() {
+    return columns.stream().filter(c -> Objects.nonNull(c.getGenerationType())).collect(Collectors.toList());
   }
 }

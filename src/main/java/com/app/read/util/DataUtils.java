@@ -42,33 +42,36 @@ public class DataUtils {
   }
 
   public static Object convertedValue(Object value, Column column) {
-    if (column.getType().equalsIgnoreCase("int") && Objects.nonNull(value)) {
+    if (Objects.isNull(value)) {
+      return null;
+    }
+    if (column.getType().equalsIgnoreCase("int")) {
       if (value instanceof BigDecimal decimal) {
         return decimal.intValue();
       }
       return Integer.parseInt(String.valueOf(value));
-    } else if (column.getType().equalsIgnoreCase("float") && Objects.nonNull(value)) {
+    } else if (column.getType().equalsIgnoreCase("float")) {
       if (value instanceof BigDecimal decimal) {
         return decimal.floatValue();
       }
       return Float.parseFloat(String.valueOf(value));
-    } else if (column.getType().equalsIgnoreCase("double") && Objects.nonNull(value)) {
+    } else if (column.getType().equalsIgnoreCase("double")) {
       if (value instanceof BigDecimal decimal) {
         return decimal.doubleValue();
       }
       return Double.parseDouble(String.valueOf(value));
-    } else if (column.getType().equalsIgnoreCase("string") && Objects.nonNull(value)) {
+    } else if (column.getType().equalsIgnoreCase("string")) {
       return String.valueOf(value);
-    } else if (column.getType().equalsIgnoreCase("number") && Objects.nonNull(value)) {
+    } else if (column.getType().equalsIgnoreCase("number")) {
       if (value instanceof BigDecimal decimal) {
         return decimal;
       }
       return new BigDecimal(String.valueOf(value));
-    } else if (column.getType().equalsIgnoreCase("date") && Objects.nonNull(value)) {
+    } else if (column.getType().equalsIgnoreCase("date")) {
       return java.sql.Date.valueOf(String.valueOf(value));
-    } else if (column.getType().equalsIgnoreCase("local-date") && Objects.nonNull(value)) {
+    } else if (column.getType().equalsIgnoreCase("local-date")) {
       return LocalDate.parse(String.valueOf(value));
-    } else if (column.getType().equalsIgnoreCase("timestamp") && Objects.nonNull(value)) {
+    } else if (column.getType().equalsIgnoreCase("timestamp")) {
       return Timestamp.valueOf(String.valueOf(value));
     }
 

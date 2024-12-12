@@ -13,6 +13,9 @@ public class Column {
   private String name;
   private String type;
   private String mapping;
-  private boolean generate;
   private GenerationType generationType;
+  /**
+   * Default value is not required for #GenerationType.DEFAULT_LONG_TIMESTAMP
+   */
+  private String defaultValue;
 }

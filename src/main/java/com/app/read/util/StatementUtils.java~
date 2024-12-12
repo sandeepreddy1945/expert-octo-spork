@@ -4,6 +4,7 @@ import com.app.read.enums.OperationType;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,6 @@ public class StatementUtils {
       tableName = schemaName + "." + tableName;
     }
     StringBuilder builder = new StringBuilder();
-    // currently only inserts are supported
     if (OperationType.INSERT.equals(operationType)) {
       builder.append("INSERT INTO ");
       builder.append(tableName);
@@ -27,11 +27,25 @@ public class StatementUtils {
       builder.append(" VALUES ");
       builder.append(headerRecord.keySet().stream().map(val -> ":" + val).collect(Collectors.joining(", ", " ( ", " ) ")));
       return builder.toString();
-    } else if(OperationType.UPDATE.equals(operationType)) {
+    } else if (OperationType.UPDATE.equals(operationType)) {
       builder.append("UPDATE ");
       builder.append(tableName);
       builder.append(" SET ");
-      builder.append(headerRecord.keySet().stream().map(val -> val + " = :" + val).collect(Collectors.joining(", ")));
+      builder.append(headerRecord.keySet().stream()
+          .filter(Predicate.not(key -> updateColumns.stream().anyMatch(col -> col.equalsIgnoreCase(key))))
+          .map(val -> String.join("= :", val, val)).collect(Collectors.joining(", ")));
+      builder.append(" WHERE ");
+      builder.append(headerRecord.keySet().stream()
+          .filter(key -> updateColumns.stream().anyMatch(col -> col.equalsIgnoreCase(key)))
+          .map(val -> String.join("= :", val, val)).collect(Collectors.joining(" AND ")));
+      return builder.toString();
+    } else if (OperationType.DELETE.equals(operationType)) {
+      builder.append("DELETE FROM ");
+      builder.append(tableName);
+      builder.append(" WHERE ");
+      builder.append(headerRecord.keySet().stream()
+          .filter(key -> updateColumns.stream().anyMatch(col -> col.equalsIgnoreCase(key)))
+          .map(val -> String.join("= :", val, val)).collect(Collectors.joining(" AND ")));
       return builder.toString();
     }
 

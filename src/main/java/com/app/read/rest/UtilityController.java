@@ -30,13 +30,14 @@ public class UtilityController {
       @RequestParam(name = "fileType", required = false, defaultValue = "XL") FileType fileType,
       @RequestParam(name = "filePath", required = false) String fileLocalPath,
       @RequestParam(name = "metadataProvided", required = false) boolean isMetadataProvided,
-      @RequestParam(name = "updateWhereColumns", required = false, defaultValue = "") List<String> updateWhereColumns)
+      @RequestParam(name = "updateWhereColumns", required = false, defaultValue = "") List<String> updateWhereColumns,
+      @RequestParam(name = "defaultTimestampColumns", required = false, defaultValue = "") List<String> defaultTimestampColumns)
       throws IOException {
     if (OperationType.UPDATE.equals(operationType) && CollectionUtils.isEmpty(updateWhereColumns)) {
       throw new IllegalArgumentException("updateWhereColumns cannot be empty");
     }
     statementExecutionService.executeStatement(tableName, operationType, schemaName, fileType, fileLocalPath, isMetadataProvided,
-        updateWhereColumns);
+        updateWhereColumns, defaultTimestampColumns);
 
     return ResponseEntity.ok("SUCCESS");
   }
@@ -49,13 +50,14 @@ public class UtilityController {
       @RequestParam(name = "metadataProvided", required = false) boolean isMetadataProvided,
       @RequestParam(name = "updateWhereColumns", required = false, defaultValue = "") List<String> updateWhereColumns,
       @RequestPart(name = "dataFile") MultipartFile dataFile,
-      @RequestParam(name = "metadata", required = false) MultipartFile metadata)
+      @RequestParam(name = "metadata", required = false) MultipartFile metadata,
+      @RequestParam(name = "defaultTimestampColumns", required = false, defaultValue = "") List<String> defaultTimestampColumns)
       throws IOException {
     if (OperationType.UPDATE.equals(operationType) && CollectionUtils.isEmpty(updateWhereColumns)) {
       throw new IllegalArgumentException("updateWhereColumns cannot be empty");
     }
     statementExecutionService.executeStatementFromFiles(tableName, operationType, schemaName, fileType, isMetadataProvided,
-        updateWhereColumns, dataFile, metadata);
+        updateWhereColumns, dataFile, metadata, defaultTimestampColumns);
 
     return ResponseEntity.ok("SUCCESS");
   }
